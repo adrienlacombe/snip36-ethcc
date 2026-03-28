@@ -1,0 +1,49 @@
+# SNIP-36 CoinFlip Demo — Full Stack
+#
+# Prerequisites:
+#   1. Clone the backend: git clone https://github.com/starknet-innovation/snip-36-prover-backend ../snip36prover
+#   2. Create .env in this directory with:
+#        STARKNET_RPC_URL=https://...
+#        STARKNET_ACCOUNT_ADDRESS=0x...
+#        STARKNET_PRIVATE_KEY=0x...
+#        STARKNET_GATEWAY_URL=https://alpha-sepolia.starknet.io
+#
+# Run:
+#   docker compose up --build
+#
+# First build takes ~30 min (stwo prover compilation). Subsequent builds use cache.
+# Open http://localhost:3000
+
+services:
+  backend:
+    build:
+      context: ../snip36prover
+      dockerfile: ../snip36-demo/docker/backend.Dockerfile
+    ports:
+      - "8090:8090"
+    env_file:
+      - .env
+    environment:
+      - SNIP36_PROJECT_DIR=/app
+      - PORT=8090
+      - RUST_LOG=info
+    volumes:
+      - backend-output:/app/output
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  backend-output:

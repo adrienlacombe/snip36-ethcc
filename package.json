@@ -1,0 +1,26 @@
+{
+  "name": "snip36-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "get-starknet-core": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "starknet": "^6.23.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.1.4",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.0"
+  }
+}

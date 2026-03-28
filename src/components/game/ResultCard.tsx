@@ -45,13 +45,18 @@ export default function ResultCard({
         </div>
       )}
 
-      <div className="mt-4 space-y-1 text-xs text-gray-500">
+      <div className="mt-4 space-y-1.5 text-xs text-gray-500">
         <div>
           Proof: {(result.proof_size / 1024).toFixed(0)} KB |{" "}
           <span className="inline-flex items-center gap-1">
-            tx: <TruncatedHash hash={result.tx_hash} chars={6} />
+            proof tx: <TruncatedHash hash={result.tx_hash} chars={6} />
           </span>
         </div>
+        {result.settle_tx_hash && result.settle_tx_hash.length > 3 && (
+          <div className="inline-flex items-center gap-1">
+            settle tx: <TruncatedHash hash={result.settle_tx_hash} chars={6} />
+          </div>
+        )}
       </div>
 
       <button

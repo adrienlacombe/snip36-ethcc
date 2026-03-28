@@ -13,6 +13,7 @@ import HowItWorks from "./components/education/HowItWorks";
 import ArchitectureDiagram from "./components/education/ArchitectureDiagram";
 import TechCard from "./components/education/TechCard";
 import FlipHistory from "./components/FlipHistory";
+import WithdrawPanel from "./components/WithdrawPanel";
 import WalletPicker from "./components/shared/WalletPicker";
 
 export default function App() {
@@ -177,6 +178,11 @@ export default function App() {
                 <LogTerminal logs={state.logs} />
               )}
             </div>
+          )}
+
+          {/* Withdraw winnings */}
+          {address && (
+            <WithdrawPanel address={address} walletProvider={walletProvider} />
           )}
 
           <FlipHistory history={state.history} />

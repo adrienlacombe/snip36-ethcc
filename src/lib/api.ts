@@ -58,6 +58,12 @@ export interface BalanceResponse {
   balance_wei: string;
 }
 
+export interface WinningsResponse {
+  winnings: string;
+  winnings_wei: string;
+  bank_address: string;
+}
+
 export interface BankStatusResponse {
   deployed: boolean;
   contract_address?: string;
@@ -100,4 +106,7 @@ export const api = {
 
   playerBalance: (address: string) =>
     get<BalanceResponse>(`/coinflip/balance/${encodeURIComponent(address)}`),
+
+  playerWinnings: (address: string) =>
+    get<WinningsResponse>(`/coinflip/winnings/${encodeURIComponent(address)}`),
 };

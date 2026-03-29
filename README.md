@@ -108,9 +108,12 @@ cp .env.example .env
 #   STARKNET_GATEWAY_URL=https://alpha-sepolia.starknet.io
 
 # Install external dependencies (stwo prover, virtual OS runner)
-# This clones repos and builds binaries -- takes ~20-30 minutes on first run
-cargo build --release -p snip36-cli
-./target/release/snip36 setup
+# Option 1: Download pre-built binaries (~30 seconds)
+./scripts/download-deps.sh
+
+# Option 2: Build from source (~20-30 minutes)
+# cargo build --release -p snip36-cli
+# ./target/release/snip36 setup
 
 # Build and start the server
 cargo run --release -p snip36-server

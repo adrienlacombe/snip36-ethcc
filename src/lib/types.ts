@@ -39,6 +39,7 @@ export interface GameState {
   contractDeployed: boolean;
   bankDeployed: boolean;
   deploying: boolean;
+  bankBalance: string | null; // bank's STRK balance, caps max bet
 }
 
 export type GameAction =
@@ -54,7 +55,8 @@ export type GameAction =
   | { type: "RESULT_RECEIVED"; result: FlipResult }
   | { type: "ERROR"; message: string }
   | { type: "RESET" }
-  | { type: "BALANCE_UPDATE"; balance: string | null };
+  | { type: "BALANCE_UPDATE"; balance: string | null }
+  | { type: "BANK_BALANCE_UPDATE"; bankBalance: string | null };
 
 export interface WalletOption {
   id: string;

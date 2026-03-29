@@ -69,6 +69,7 @@ export default function CoinFlipGame({
           bet={state.bet}
           betAmount={state.betAmount}
           balance={state.balance}
+          bankBalance={state.bankBalance}
           disabled={isPlaying}
           onBetChange={(b) => dispatch({ type: "SET_BET", bet: b })}
           onAmountChange={(a) => dispatch({ type: "SET_BET_AMOUNT", amount: a })}

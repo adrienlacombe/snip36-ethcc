@@ -75,6 +75,24 @@ export default function App() {
     };
   }, [address, dispatch]);
 
+  // Poll bank balance
+  useEffect(() => {
+    let disposed = false;
+    const fetchBankBalance = async () => {
+      try {
+        const resp = await api.bankStatus();
+        if (!disposed && resp.bank_balance) {
+          dispatch({ type: "BANK_BALANCE_UPDATE", bankBalance: resp.bank_balance });
+        }
+      } catch {
+        // ignore
+      }
+    };
+    fetchBankBalance();
+    const interval = window.setInterval(fetchBankBalance, 15000);
+    return () => { disposed = true; window.clearInterval(interval); };
+  }, [dispatch]);
+
   const isPlaying =
     state.phase !== "idle" &&
     state.phase !== "complete" &&

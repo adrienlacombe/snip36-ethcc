@@ -20,6 +20,7 @@ const initialState: GameState = {
   contractDeployed: false,
   bankDeployed: false,
   deploying: false,
+  bankBalance: null,
 };
 
 function clampBetAmount(amount: number, balance: string | null): number {
@@ -119,6 +120,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         address: state.address,
         betAmount: clampBetAmount(initialState.betAmount, state.balance),
         balance: state.balance,
+        bankBalance: state.bankBalance,
         history: state.history,
         contractDeployed: state.contractDeployed,
         bankDeployed: state.bankDeployed,
@@ -129,6 +131,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         balance: action.balance,
         betAmount: clampBetAmount(state.betAmount, action.balance),
+      };
+
+    case "BANK_BALANCE_UPDATE":
+      return {
+        ...state,
+        bankBalance: action.bankBalance,
       };
 
     default:

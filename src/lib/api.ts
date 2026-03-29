@@ -67,6 +67,7 @@ export interface WinningsResponse {
 export interface BankStatusResponse {
   deployed: boolean;
   contract_address?: string;
+  bank_balance?: string;
 }
 
 export const api = {

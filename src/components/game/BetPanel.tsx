@@ -2,6 +2,7 @@ interface BetPanelProps {
   bet: 0 | 1;
   betAmount: number;
   balance: string | null;
+  bankBalance: string | null;
   disabled: boolean;
   onBetChange: (bet: 0 | 1) => void;
   onAmountChange: (amount: number) => void;
@@ -12,6 +13,7 @@ export default function BetPanel({
   bet,
   betAmount,
   balance,
+  bankBalance,
   disabled,
   onBetChange,
   onAmountChange,
@@ -20,14 +22,21 @@ export default function BetPanel({
   const minBet = 0.1;
   const balanceNum =
     balance === null ? null : Number.parseFloat(balance);
-  const maxBet =
-    balanceNum === null || Number.isNaN(balanceNum)
-      ? null
-      : Math.min(100, Math.max(0, balanceNum));
+  const bankNum =
+    bankBalance === null ? null : Number.parseFloat(bankBalance);
+
+  // Max bet is the minimum of: player balance, bank balance, and hard cap 100
+  const limits = [100];
+  if (balanceNum !== null && !Number.isNaN(balanceNum)) limits.push(balanceNum);
+  if (bankNum !== null && !Number.isNaN(bankNum)) limits.push(bankNum);
+  const maxBet = Math.max(0, Math.min(...limits));
+
   const sliderMax =
-    maxBet === null ? Math.max(1, betAmount) : Math.max(minBet, maxBet);
+    maxBet < minBet ? Math.max(1, betAmount) : Math.max(minBet, maxBet);
   const canAffordBet =
-    maxBet !== null && maxBet >= minBet && betAmount <= maxBet;
+    maxBet >= minBet && betAmount <= maxBet;
+
+  const bankLow = bankNum !== null && bankNum < betAmount;
 
   return (
     <div className="animate-fade-in space-y-5">
@@ -73,7 +82,7 @@ export default function BetPanel({
         />
         <div className="flex justify-between text-xs text-gray-500">
           <span>{minBet}</span>
-          <span>{maxBet === null ? "..." : maxBet.toFixed(1)}</span>
+          <span>{maxBet < minBet ? "..." : maxBet.toFixed(1)}</span>
         </div>
       </div>
 
@@ -84,6 +93,13 @@ export default function BetPanel({
           Pot: {(betAmount * 2).toFixed(1)} STRK
         </span>
       </div>
+
+      {/* Bank balance warning */}
+      {bankLow && (
+        <div className="text-center text-xs text-red-400">
+          Bank only has {bankBalance} STRK — lower your bet
+        </div>
+      )}
 
       {/* Flip button */}
       <button
@@ -99,9 +115,14 @@ export default function BetPanel({
         Flip Coin
       </button>
 
-      {/* Balance */}
-      <div className="text-center text-xs text-gray-500">
-        Wallet balance: {balance === null ? "loading..." : `${balance} STRK`}
+      {/* Balances */}
+      <div className="text-center text-xs text-gray-500 space-y-0.5">
+        <div>
+          Wallet: {balance === null ? "loading..." : `${balance} STRK`}
+        </div>
+        <div>
+          Bank: {bankBalance === null ? "loading..." : `${bankBalance} STRK`}
+        </div>
       </div>
     </div>
   );

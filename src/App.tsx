@@ -200,7 +200,7 @@ export default function App() {
 
           {/* Withdraw winnings */}
           {address && (
-            <WithdrawPanel address={address} walletProvider={walletProvider} />
+            <WithdrawPanel address={address} walletProvider={walletProvider} refreshKey={state.history.length} />
           )}
 
           <FlipHistory history={state.history} />

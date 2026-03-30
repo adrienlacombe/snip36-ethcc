@@ -6,11 +6,14 @@ interface WithdrawPanelProps {
   address: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   walletProvider: React.RefObject<any>;
+  /** Incremented each time a game completes to trigger immediate refresh */
+  refreshKey?: number;
 }
 
 export default function WithdrawPanel({
   address,
   walletProvider,
+  refreshKey,
 }: WithdrawPanelProps) {
   const [winnings, setWinnings] = useState<string | null>(null);
   const [bankAddress, setBankAddress] = useState<string>("");
@@ -32,7 +35,7 @@ export default function WithdrawPanel({
     fetchWinnings();
     const interval = setInterval(fetchWinnings, 15000);
     return () => clearInterval(interval);
-  }, [fetchWinnings]);
+  }, [fetchWinnings, refreshKey]);
 
   const handleWithdraw = async () => {
     const provider = walletProvider.current;

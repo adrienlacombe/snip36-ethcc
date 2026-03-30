@@ -8,11 +8,11 @@ Player bets STRK, the bank matches, a coin is flipped inside a SNIP-36 virtual b
 
 ![Flow Diagram](docs/flow-diagram.svg)
 
-The diagram shows the full 9-step flow, color-coded by where each step happens:
-- **Green** = on-chain (Starknet Sepolia) -- token transfers, proof verification, settlement
-- **Purple** = off-chain (server) -- virtual OS execution, STARK proof generation
-- **Amber** = player wallet actions -- commit, deposit, withdraw
-- **Dashed** = on-chain state updates (CoinFlipBank contract storage)
+The diagram shows the full 10-step flow across 4 lanes:
+- **Amber (Player)** -- wallet actions: commit bet, deposit STRK, reveal, withdraw
+- **Blue (Server)** -- backend orchestration: match deposit, lock seed, construct tx, submit proof, settle
+- **Purple (Virtual Block / Prover)** -- SNIP-36 specific: Virtual OS execution + stwo STARK proof generation
+- **Green (On-chain)** -- Starknet: STRK transfers, proof verification, settlement, state updates
 
 ## Game Flow
 

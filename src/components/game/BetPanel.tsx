@@ -25,10 +25,11 @@ export default function BetPanel({
   const bankNum =
     bankBalance === null ? null : Number.parseFloat(bankBalance);
 
-  // Max bet is the minimum of: player balance, bank balance, and hard cap 100
+  // Max bet is min(player balance, bank balance / 2, hard cap 100)
+  // Bank needs to cover match (1x) + potential payout (2x) so must have >= 2x bet
   const limits = [100];
   if (balanceNum !== null && !Number.isNaN(balanceNum)) limits.push(balanceNum);
-  if (bankNum !== null && !Number.isNaN(bankNum)) limits.push(bankNum);
+  if (bankNum !== null && !Number.isNaN(bankNum)) limits.push(bankNum / 2);
   const maxBet = Math.max(0, Math.min(...limits));
 
   const sliderMax =

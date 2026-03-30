@@ -8,7 +8,7 @@ Player bets STRK, the bank matches, a coin is flipped inside a SNIP-36 virtual b
 
 ![Flow Diagram](docs/flow-diagram.svg)
 
-The diagram shows the full 10-step flow across 4 lanes:
+The diagram shows the full 9-step flow across 4 lanes:
 - **Amber (Player)** -- wallet actions: commit bet, deposit STRK, reveal, withdraw
 - **Blue (Server)** -- backend orchestration: match deposit, lock seed, construct tx, submit proof, settle
 - **Purple (Virtual Block / Prover)** -- SNIP-36 specific: Virtual OS execution + stwo STARK proof generation
@@ -24,8 +24,7 @@ The diagram shows the full 10-step flow across 4 lanes:
 6. **Virtual OS** -- Server executes `play(seed, player, bet)` off-chain in a SNIP-36 virtual block (zero gas)
 7. **stwo prover** -- Circle STARK proof generated (~200-400 KB), proving the execution was honest
 8. **Submit proof** -- Proof-bearing transaction submitted to Starknet gateway
-9. **Settle** -- Proof verified on-chain, triggering `CoinFlipBank.settle()` which recomputes the outcome and credits the winner
-10. **Withdraw** -- Player claims winnings from the contract to their wallet
+9. **Settle** -- Proof verified on-chain, triggering `CoinFlipBank.settle()` which recomputes the outcome and transfers 2x bet directly to the winner's wallet
 
 ## SNIP-36 Features Demonstrated
 
@@ -60,12 +59,11 @@ fn play(seed: felt252, player: felt252, bet: felt252) {
 
 ### CoinFlipBank (on-chain settlement)
 
-Holds STRK deposits and pays the winner after the proof is verified.
+Holds STRK deposits and pays the winner directly after the proof is verified.
 
 - `deposit(session_id, amount, seed, bet)` -- Player deposits STRK (after ERC20 approve)
 - `match_deposit(session_id)` -- Bank matches the player's deposit
-- `settle(session_id)` -- Recomputes outcome, credits winner's balance
-- `withdraw()` -- Player withdraws accumulated winnings
+- `settle(session_id, seed)` -- Recomputes outcome, transfers 2x bet to the winner's wallet automatically
 
 ## Running the Demo
 
@@ -135,9 +133,8 @@ The Vite dev server proxies `/api` requests to `http://localhost:8090` automatic
 3. Choose **Heads** or **Tails** and set your bet amount (capped by your balance and the bank's)
 4. Click **Flip Coin**
 5. Approve the STRK deposit in your wallet popup (one signature for approve + deposit)
-6. Watch the 10-step proof pipeline in real-time: commit -> deposit -> bank match -> seed lock -> reveal -> virtual OS -> prove -> submit -> settle
-7. See the result -- winner gets 2x the bet, with proof tx and settle tx linked to Starkscan
-8. If you won, click **Withdraw** to claim your STRK to your wallet
+6. Watch the 9-step proof pipeline in real-time: commit -> deposit -> bank match -> seed lock -> reveal -> virtual OS -> prove -> submit -> settle
+7. See the result -- winner gets 2x the bet transferred directly to their wallet, with proof tx and settle tx linked to Voyager
 
 ### Option B: Run with Docker
 

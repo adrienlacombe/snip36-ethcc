@@ -1,6 +1,6 @@
 import type { GamePhase } from "./types";
 
-export const EXPLORER_BASE = "https://sepolia.starkscan.co/tx/";
+export const EXPLORER_BASE = "https://sepolia.voyager.online/tx/";
 
 export const SNIP36_LINK =
   "https://community.starknet.io/t/snip-36-in-protocol-proof-verification/116123";

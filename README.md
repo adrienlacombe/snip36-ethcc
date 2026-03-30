@@ -6,22 +6,13 @@ Player bets STRK, the bank matches, a coin is flipped inside a SNIP-36 virtual b
 
 ## Architecture
 
-```
-┌──────────────────┐     approve + deposit      ┌──────────────────────┐     match_deposit      ┌──────────────┐
-│  Player Wallet   │ ─────────────────────────▶  │   CoinFlipBank       │ ◀──────────────────── │   Server     │
-│  (ArgentX/       │                             │   (settlement        │                       │   (bank)     │
-│   Braavos)       │ ◀───── 2x payout ───────── │    contract)         │ ──── settle() ──────▶ │              │
-└──────────────────┘                             └──────────────────────┘                       └──────┬───────┘
-                                                                                                       │
-       ┌───────────────────────────────────────────────────────────────────────────────────────────────┘
-       │
-       ▼
-┌─────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
-│  Virtual OS  │ ────▶ │ stwo Prover  │ ────▶ │   Gateway    │ ────▶ │  Starknet    │
-│  (off-chain  │  PIE  │ (STARK proof │ proof │  (submit tx  │       │  (verify     │
-│   execution) │       │  generation) │       │   + proof)   │       │   on-chain)  │
-└─────────────┘       └──────────────┘       └──────────────┘       └──────────────┘
-```
+![Flow Diagram](docs/flow-diagram.svg)
+
+The diagram shows the full 9-step flow, color-coded by where each step happens:
+- **Green** = on-chain (Starknet Sepolia) -- token transfers, proof verification, settlement
+- **Purple** = off-chain (server) -- virtual OS execution, STARK proof generation
+- **Amber** = player wallet actions -- commit, deposit, withdraw
+- **Dashed** = on-chain state updates (CoinFlipBank contract storage)
 
 ## Game Flow
 

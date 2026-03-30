@@ -2,7 +2,6 @@ import { useReducer } from "react";
 import type { GameState, GameAction } from "../lib/types";
 
 const MIN_BET = 0.1;
-const MAX_BET = 100;
 
 const initialState: GameState = {
   phase: "idle",
@@ -28,8 +27,8 @@ function clampBetAmount(amount: number, balance: string | null): number {
   const parsedBalance =
     balance === null ? Number.NaN : Number.parseFloat(balance);
   const maxBet = Number.isNaN(parsedBalance)
-    ? MAX_BET
-    : Math.min(MAX_BET, Math.max(0, parsedBalance));
+    ? Number.MAX_SAFE_INTEGER
+    : Math.max(0, parsedBalance);
   const upperBound = Math.max(MIN_BET, maxBet);
 
   return Math.min(Math.max(roundedAmount, MIN_BET), upperBound);

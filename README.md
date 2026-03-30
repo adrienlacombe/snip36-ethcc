@@ -16,15 +16,16 @@ The diagram shows the full 10-step flow across 4 lanes:
 
 ## Game Flow
 
-1. **Connect wallet** -- ArgentX or Braavos on Starknet Sepolia
-2. **Choose side & amount** -- Heads or tails, 0.1-100 STRK
-3. **Commit** -- Browser computes `pedersen(bet, nonce)` and sends the hash (bet stays hidden)
-4. **Deposit** -- Player signs approve + deposit multicall in wallet (one signature)
-5. **Bank match** -- Server matches the deposit from bank funds
-6. **Prove** -- Server executes `play(seed, player, bet)` in a SNIP-36 virtual block, generates a STARK proof via the stwo prover
-7. **Submit** -- Proof-bearing transaction submitted to Starknet
-8. **Verify** -- Starknet protocol verifies the proof on-chain
-9. **Settle** -- Settlement contract recomputes the deterministic outcome and pays the winner
+1. **Commit** -- Browser computes `pedersen(bet, nonce)` and sends the hash to the server (bet stays hidden)
+2. **Deposit** -- Player signs approve + deposit multicall in wallet (one signature, STRK goes to CoinFlipBank contract)
+3. **Bank match** -- Server matches the deposit from bank funds (contract now holds 2x bet)
+4. **Lock seed** -- Server locks `seed = current_block - 1` as the randomness source (after commit, before reveal)
+5. **Reveal** -- Player's bet and nonce are sent to server, which verifies the commitment matches
+6. **Virtual OS** -- Server executes `play(seed, player, bet)` off-chain in a SNIP-36 virtual block (zero gas)
+7. **stwo prover** -- Circle STARK proof generated (~200-400 KB), proving the execution was honest
+8. **Submit proof** -- Proof-bearing transaction submitted to Starknet gateway
+9. **Settle** -- Proof verified on-chain, triggering `CoinFlipBank.settle()` which recomputes the outcome and credits the winner
+10. **Withdraw** -- Player claims winnings from the contract to their wallet
 
 ## SNIP-36 Features Demonstrated
 
@@ -130,13 +131,13 @@ The Vite dev server proxies `/api` requests to `http://localhost:8090` automatic
 #### 3. Play
 
 1. Open http://localhost:5173 in a browser with ArgentX or Braavos installed
-2. Click **Connect Wallet**
-3. Choose **Heads** or **Tails** and set your bet amount
+2. Click **Connect Wallet** -- your real STRK balance is displayed
+3. Choose **Heads** or **Tails** and set your bet amount (capped by your balance and the bank's)
 4. Click **Flip Coin**
 5. Approve the STRK deposit in your wallet popup (one signature for approve + deposit)
-6. Watch the proof pipeline: deposit -> bank match -> prove -> submit -> verify -> settle
-7. See the result -- winner gets 2x the bet on-chain
-8. If you won, click **Withdraw** to claim your STRK
+6. Watch the 10-step proof pipeline in real-time: commit -> deposit -> bank match -> seed lock -> reveal -> virtual OS -> prove -> submit -> settle
+7. See the result -- winner gets 2x the bet, with proof tx and settle tx linked to Starkscan
+8. If you won, click **Withdraw** to claim your STRK to your wallet
 
 ### Option B: Run with Docker
 

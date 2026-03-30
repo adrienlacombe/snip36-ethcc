@@ -178,7 +178,18 @@
   <text x="940" y="812" fill="#34d399" font-size="12" font-weight="700">Protocol verifies proof</text>
   <text x="940" y="830" fill="#a7f3d0" font-size="10">SNIP-36 in-protocol verification</text>
 
+  <!-- On-chain verification output -->
+  <rect x="1160" y="790" width="200" height="55" rx="8" fill="#0f172a" stroke="#34d399" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="1180" y="810" fill="#34d399" font-size="10" font-weight="600">Proof confirmed:</text>
+  <text x="1180" y="824" fill="#64748b" font-size="9">L2→L1 settlement message</text>
+  <text x="1180" y="838" fill="#64748b" font-size="9">proven on-chain</text>
+
   <line x1="565" y1="817" x2="918" y2="817" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <line x1="1140" y1="817" x2="1158" y2="817" stroke="#34d399" stroke-width="1" stroke-dasharray="4 2" marker-end="url(#arr-green)"/>
+
+  <!-- Arrow: proof confirmed → triggers settlement -->
+  <path d="M 920 845 L 880 845 L 880 892 L 565 892" fill="none" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="700" y="858" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">proof confirmed → triggers settle</text>
 
   <!-- Arrow from prover to server -->
   <path d="M 615 742 L 565 742 L 565 790" fill="none" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
@@ -187,7 +198,7 @@
   <!-- STEP 9: Settlement -->
   <rect x="315" y="865" width="250" height="55" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
   <text x="335" y="887" fill="#60a5fa" font-size="12" font-weight="600">9. Settle</text>
-  <text x="335" y="905" fill="#64748b" font-size="10">Server calls settle(session)</text>
+  <text x="335" y="905" fill="#64748b" font-size="10">Triggered by proof confirmation</text>
 
   <rect x="920" y="865" width="220" height="55" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="1.5"/>
   <text x="940" y="882" fill="#34d399" font-size="12" font-weight="700">CoinFlipBank.settle()</text>
